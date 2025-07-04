@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Session
-from app.database import get_session
-from app.models import Admin, Link
-from app.auth import verify_password, create_jwt, decode_jwt
-from app.crud import create_admin, get_admin_by_email, create_link, get_admin_links, delete_link, update_link
+from backend.database import get_session
+from backend.models import Admin, Link
+from backend.auth import verify_password, create_jwt, decode_jwt
+from backend.crud import create_admin, get_admin_by_email, create_link, get_admin_links, delete_link, update_link
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/admin/login")
@@ -19,9 +19,9 @@ def get_current_admin(token: str = Depends(oauth2_scheme)) -> dict:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 # Registration should not be exposed by default.
-from app.config import ADMIN_REGISTRATION_KEY
+from backend.config import ADMIN_REGISTRATION_KEY
 from fastapi import Query
-from app.auth import hash_password
+from backend.auth import hash_password
 @router.post("/register")
 def register_admin(
     admin_data: Admin,
